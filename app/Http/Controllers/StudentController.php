@@ -71,10 +71,13 @@ class StudentController extends Controller
     //  This function user search data from database.......
     function search(Request $request)
     {
-        $users = Student::where('name', 'like', "%$request->search%")->get();
-        $users = Student::where('email', 'like', "%$request->search%")->get();
-        $users = Student::where('mobile', 'like', "%$request->search%")->get();
+        $input = $request->search;
 
-        return view('userprofile', ['users' => $users, 'search' => $request->search]);
+        $users = Student::where('name', 'like', "%{$input}%")
+            ->orWhere('email', 'like', "%{$input}%")
+            ->orWhere('mobile', 'like', "%{$input}%")
+            ->get();
+
+        return view('userprofile', ['users' => $users, 'search' => $input]);
     }
 }
